@@ -3,7 +3,7 @@ package com.tumme.scrudstudents.ui.course
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tumme.scrudstudents.data.local.model.CourseEntity
-import com.tumme.scrudstudents.data.repository.SCRUDRepository
+import com.tumme.scrudstudents.data.repository.CourseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CourseViewModel @Inject constructor(
-    private val repo: SCRUDRepository
+    private val repo: CourseRepository
 ) : ViewModel() {
 
     private val _courses: StateFlow<List<CourseEntity>> =

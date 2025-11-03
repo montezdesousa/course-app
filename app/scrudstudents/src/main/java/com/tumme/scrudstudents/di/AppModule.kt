@@ -6,7 +6,12 @@ import com.tumme.scrudstudents.data.local.AppDatabase
 import com.tumme.scrudstudents.data.local.dao.CourseDao
 import com.tumme.scrudstudents.data.local.dao.StudentDao
 import com.tumme.scrudstudents.data.local.dao.SubscribeDao
-import com.tumme.scrudstudents.data.repository.SCRUDRepository
+ import com.tumme.scrudstudents.data.local.dao.TeacherDao
+import com.tumme.scrudstudents.data.repository.AuthRepository
+import com.tumme.scrudstudents.data.repository.CourseRepository
+import com.tumme.scrudstudents.data.repository.StudentRepository
+import com.tumme.scrudstudents.data.repository.SubscribeRepository
+import com.tumme.scrudstudents.data.repository.TeacherRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +33,32 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRepository(studentDao: StudentDao, courseDao: CourseDao,
-                          subscribeDao: SubscribeDao): SCRUDRepository =
-        SCRUDRepository(studentDao, courseDao, subscribeDao)
+    fun provideAuthRepository(
+        studentDao: StudentDao,
+        teacherDao: TeacherDao
+    ): AuthRepository = AuthRepository(studentDao, teacherDao)
+
+    @Provides
+    @Singleton
+    fun provideStudentRepository(studentDao: StudentDao): StudentRepository =
+        StudentRepository(studentDao)
+
+    @Provides
+    @Singleton
+    fun provideTeacherRepository(
+        teacherDao: TeacherDao, courseDao: CourseDao, subscribeDao: SubscribeDao
+    ): TeacherRepository {
+        return TeacherRepository(teacherDao, courseDao, subscribeDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCourseRepository(courseDao: CourseDao): CourseRepository =
+        CourseRepository(courseDao)
+
+    @Provides
+    @Singleton
+    fun provideSubscribeRepository(subscribeDao: SubscribeDao): SubscribeRepository =
+        SubscribeRepository(subscribeDao)
+
 }

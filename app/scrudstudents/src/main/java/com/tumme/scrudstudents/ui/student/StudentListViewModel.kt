@@ -3,7 +3,7 @@ package com.tumme.scrudstudents.ui.student
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tumme.scrudstudents.data.local.model.StudentEntity
-import com.tumme.scrudstudents.data.repository.SCRUDRepository
+import com.tumme.scrudstudents.data.repository.StudentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class StudentListViewModel @Inject constructor(
-    private val repo: SCRUDRepository // Repository that handles Student CRUD operations
+    private val repo: StudentRepository // Repository that handles Student CRUD operations
 ) : ViewModel() {
 
     /**
