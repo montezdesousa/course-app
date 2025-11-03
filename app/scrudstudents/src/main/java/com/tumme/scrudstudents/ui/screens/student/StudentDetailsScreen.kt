@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.student
+package com.tumme.scrudstudents.ui.screens.student
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.StudentEntity
+import com.tumme.scrudstudents.ui.viewmodel.StudentListViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 

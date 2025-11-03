@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.student
+package com.tumme.scrudstudents.ui.screens.student
 
 import com.tumme.scrudstudents.ui.components.TableHeader
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.ui.viewmodel.StudentListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                AppNavHost() // from NavGraphs.kt
+                AppNavHost() // from AppNavHost.kt
             }
         }
     }

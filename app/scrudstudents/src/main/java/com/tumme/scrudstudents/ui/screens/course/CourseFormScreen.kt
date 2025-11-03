@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.course
+package com.tumme.scrudstudents.ui.screens.course
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -10,6 +10,7 @@ import com.tumme.scrudstudents.data.local.model.LevelCourse
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
+import com.tumme.scrudstudents.ui.viewmodel.CourseViewModel
 
 @Composable
 fun CourseFormScreen(

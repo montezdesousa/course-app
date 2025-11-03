@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.student
+package com.tumme.scrudstudents.ui.screens.student
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,6 +11,7 @@ import java.util.Locale
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.Gender
 import com.tumme.scrudstudents.data.local.model.StudentEntity
+import com.tumme.scrudstudents.ui.viewmodel.StudentListViewModel
 
 /**
  * Screen to add a new Student.

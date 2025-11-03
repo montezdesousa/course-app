@@ -1,11 +1,15 @@
-package com.tumme.scrudstudents.ui.course
+package com.tumme.scrudstudents.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import com.tumme.scrudstudents.data.repository.CourseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,7 +19,7 @@ class CourseViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _courses: StateFlow<List<CourseEntity>> =
-        repo.getAllCourses().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        repo.getAllCourses().stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
 
     val courses: StateFlow<List<CourseEntity>> = _courses
 

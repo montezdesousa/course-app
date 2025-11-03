@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.subscribe
+package com.tumme.scrudstudents.ui.screens.subscribe
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Save
+import com.tumme.scrudstudents.ui.viewmodel.SubscribeViewModel
 
 @Composable
 fun SubscribeFormScreen(

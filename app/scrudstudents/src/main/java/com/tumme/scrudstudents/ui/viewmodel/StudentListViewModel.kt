@@ -1,11 +1,15 @@
-package com.tumme.scrudstudents.ui.student
+package com.tumme.scrudstudents.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.repository.StudentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,7 +46,7 @@ class StudentListViewModel @Inject constructor(
      *   automatically, updating the LazyColumn without manual refresh.
      */
     private val _students: StateFlow<List<StudentEntity>> =
-        repo.getAllStudents().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        repo.getAllStudents().stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
 
     // Public read-only StateFlow for Compose UI to observe
     val students: StateFlow<List<StudentEntity>> = _students

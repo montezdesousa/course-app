@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.student
+package com.tumme.scrudstudents.ui.screens.student
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

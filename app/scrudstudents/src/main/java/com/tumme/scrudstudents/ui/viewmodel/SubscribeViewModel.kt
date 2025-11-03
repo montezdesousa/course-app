@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.subscribe
+package com.tumme.scrudstudents.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,12 @@ import com.tumme.scrudstudents.data.repository.CourseRepository
 import com.tumme.scrudstudents.data.repository.StudentRepository
 import com.tumme.scrudstudents.data.repository.SubscribeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,11 +26,11 @@ class SubscribeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val subscriptions: StateFlow<List<SubscribeEntity>> =
-        subscribeRepo.getAllSubscribes().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        subscribeRepo.getAllSubscribes().stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
     val students: StateFlow<List<StudentEntity>> =
-        studentRepo.getAllStudents().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        studentRepo.getAllStudents().stateIn(viewModelScope, SharingStarted.Companion.Eagerly, emptyList())
     val courses: StateFlow<List<CourseEntity>> =
-        courseRepo.getAllCourses().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        courseRepo.getAllCourses().stateIn(viewModelScope, SharingStarted.Companion.Eagerly, emptyList())
 
 
     private val _events = MutableSharedFlow<String>()

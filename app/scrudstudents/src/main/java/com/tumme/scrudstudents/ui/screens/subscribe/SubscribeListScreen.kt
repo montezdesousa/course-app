@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.subscribe
+package com.tumme.scrudstudents.ui.screens.subscribe
 
 import com.tumme.scrudstudents.ui.components.TableHeader
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import com.tumme.scrudstudents.ui.viewmodel.SubscribeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
