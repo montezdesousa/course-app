@@ -12,20 +12,33 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.Gender
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 
+/**
+ * Screen to add a new Student.
+ *
+ * Purpose:
+ * - Collect user input for a new student.
+ * - Create a StudentEntity object and save it to the database via ViewModel.
+ *
+ * MVVM Data Flow:
+ * UI input -> Compose State -> ViewModel.insertStudent() -> Repository -> DAO -> Room DB
+ * Room DB updates trigger StateFlow emission -> Compose UI observing student list recomposes
+ */
 @Composable
 fun StudentFormScreen(
-    viewModel: StudentListViewModel = hiltViewModel(),
-    onSaved: ()->Unit = {}
+    viewModel: StudentListViewModel = hiltViewModel(), // Hilt injects the ViewModel
+    onSaved: ()->Unit = {} // Callback after saving (e.g., navigate back)
 ) {
-    var id by remember { mutableStateOf((0..10000).random()) }
-    var lastName by remember { mutableStateOf("") }
-    var firstName by remember { mutableStateOf("") }
+    // Compose states for form inputs
+    var id by remember { mutableStateOf((0..10000).random()) } // Random ID for new student
+    var lastName by remember { mutableStateOf("") }                  // Last Name input
+    var firstName by remember { mutableStateOf("") }                 // First Name input
     var dobText by remember { mutableStateOf("2000-01-01") } // yyyy-MM-dd
-    var gender by remember { mutableStateOf(Gender.NotConcerned) }
+    var gender by remember { mutableStateOf(Gender.NotConcerned) }   // Gender selection
 
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        // Form fields
         TextField(value = lastName, onValueChange = { lastName = it }, label = { Text("Last Name") })
         Spacer(Modifier.height(8.dp))
         TextField(value = firstName, onValueChange = { firstName = it }, label = { Text("First Name") })
@@ -42,8 +55,12 @@ fun StudentFormScreen(
             }
         }
         Spacer(Modifier.height(16.dp))
+
+        // Save Button
         Button(onClick = {
+            // Parse date, default to today if parsing fails
             val dob = dateFormat.parse(dobText) ?: Date()
+            // Create StudentEntity
             val student = StudentEntity(
                 idStudent = id,
                 lastName = lastName,
@@ -51,7 +68,10 @@ fun StudentFormScreen(
                 dateOfBirth = dob,
                 gender = gender
             )
+            // Insert into DB via ViewModel
+            // - Calls viewModelScope.launch internally
             viewModel.insertStudent(student)
+            // Callback after saving
             onSaved()
         }) {
             Text("Save")
