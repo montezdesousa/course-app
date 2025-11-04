@@ -14,11 +14,10 @@ import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeacherHomeScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
-    userId: String?, // Logged-in teacher ID
-    onNavigateToDeclareCourses: (userId: String) -> Unit = {},
-    onNavigateToEnterGrades: (userId: String) -> Unit = {},
-    onNavigateToViewEnrolledStudents: (userId: String) -> Unit = {},
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onNavigateToCourses: () -> Unit = {},
+    onNavigateToGrades: () -> Unit = {},
+    onNavigateToEnrolledStudents: () -> Unit = {},
     onLogoutNavigate: () -> Unit = {}
 ) {
     Column(
@@ -28,7 +27,10 @@ fun TeacherHomeScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Welcome, Teacher!", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = "Welcome, ${authViewModel.currentUsername}!",
+            style = MaterialTheme.typography.headlineMedium
+        )
         Spacer(modifier = Modifier.height(24.dp))
 
         // Declare Courses
@@ -36,11 +38,11 @@ fun TeacherHomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { userId?.let { onNavigateToDeclareCourses(it) } },
+                .clickable { onNavigateToCourses() },
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
-                Text("Declare Courses")
+                Text("Courses")
             }
         }
 
@@ -49,11 +51,11 @@ fun TeacherHomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { userId?.let { onNavigateToEnterGrades(it) } },
+                .clickable { onNavigateToGrades() },
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
-                Text("Enter Grades")
+                Text("Grades")
             }
         }
 
@@ -62,11 +64,11 @@ fun TeacherHomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { userId?.let { onNavigateToViewEnrolledStudents(it) } },
+                .clickable { onNavigateToEnrolledStudents() },
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
-                Text("View Enrolled Students")
+                Text("Enrolled Students")
             }
         }
 
@@ -75,7 +77,7 @@ fun TeacherHomeScreen(
         // Logout Button
         Button(
             onClick = {
-                viewModel.logout()
+                authViewModel.logout()
                 onLogoutNavigate()
             },
             modifier = Modifier.fillMaxWidth()

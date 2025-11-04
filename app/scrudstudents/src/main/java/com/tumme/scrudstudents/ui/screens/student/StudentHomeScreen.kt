@@ -14,11 +14,10 @@ import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentHomeScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
-    userId: String?, // Logged-in student ID
-    onNavigateToCourses: (userId: String) -> Unit = {},
-    onNavigateToSubscriptions: (userId: String) -> Unit = {},
-    onNavigateToGrades: (userId: String) -> Unit = {},
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onNavigateToCourses: () -> Unit = {},
+    onNavigateToSubscriptions: () -> Unit = {},
+    onNavigateToGrades: () -> Unit = {},
     onLogoutNavigate: () -> Unit = {}
 ) {
     Column(
@@ -28,7 +27,7 @@ fun StudentHomeScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Welcome, Student!", style = MaterialTheme.typography.headlineMedium)
+        Text(text = "Welcome, ${authViewModel.currentUsername}!", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(24.dp))
 
         // Courses
@@ -36,7 +35,7 @@ fun StudentHomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { userId?.let { onNavigateToCourses(it) } },
+                .clickable { onNavigateToCourses() },
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
@@ -49,7 +48,7 @@ fun StudentHomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { userId?.let { onNavigateToSubscriptions(it) } },
+                .clickable { onNavigateToSubscriptions() },
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
@@ -62,7 +61,7 @@ fun StudentHomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { userId?.let { onNavigateToGrades(it) } },
+                .clickable { onNavigateToGrades() },
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
@@ -73,10 +72,13 @@ fun StudentHomeScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Logout Button
-        Button(onClick = {
-            viewModel.logout()
-            onLogoutNavigate()
-        }, modifier = Modifier.fillMaxWidth()) {
+        Button(
+            onClick = {
+                authViewModel.logout()
+                onLogoutNavigate()
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text("Logout")
         }
     }

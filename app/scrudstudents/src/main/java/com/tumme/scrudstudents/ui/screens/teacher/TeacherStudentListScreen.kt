@@ -12,8 +12,7 @@ import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeacherStudentListScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
-    userId: String?, // Logged-in student ID
+    authViewModel: AuthViewModel = hiltViewModel(),
     onLogoutNavigate: () -> Unit = {}
 ) {
     Column(
@@ -25,7 +24,7 @@ fun TeacherStudentListScreen(
     ) {
         // Logout Button
         Button(onClick = {
-            viewModel.logout()
+            authViewModel.logout()
             onLogoutNavigate()
         }, modifier = Modifier.fillMaxWidth()) {
             Text("Logout")

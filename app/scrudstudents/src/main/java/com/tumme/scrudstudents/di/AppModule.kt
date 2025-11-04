@@ -46,10 +46,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTeacherRepository(
-        teacherDao: TeacherDao, courseDao: CourseDao, subscribeDao: SubscribeDao
-    ): TeacherRepository {
-        return TeacherRepository(teacherDao, courseDao, subscribeDao)
+    fun provideTeacherRepository(courseDao: CourseDao): TeacherRepository {
+        return TeacherRepository(courseDao)
     }
 
     @Provides

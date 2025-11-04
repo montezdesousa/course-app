@@ -15,7 +15,7 @@ import com.tumme.scrudstudents.data.local.model.UserRole
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
     onStudentLogin: (Int) -> Unit,
     onTeacherLogin: (Int) -> Unit,
     onNavigateToRegister: () -> Unit
@@ -58,7 +58,7 @@ fun LoginScreen(
         // --- Login Button ---
         Button(
             onClick = {
-                viewModel.login(username, password)
+                authViewModel.login(username, password)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -66,7 +66,7 @@ fun LoginScreen(
         }
 
         // --- UI reacts to login state ---
-        when (val state = viewModel.loginState) {
+        when (val state = authViewModel.loginState) {
             is LoginState.Loading -> {
                 Spacer(Modifier.height(16.dp))
                 CircularProgressIndicator()

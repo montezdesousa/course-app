@@ -7,8 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
-import com.tumme.scrudstudents.data.repository.AuthRepository.AuthResult
+import com.tumme.scrudstudents.data.local.model.UserRole
 import com.tumme.scrudstudents.data.repository.AuthRepository
+import com.tumme.scrudstudents.data.repository.AuthRepository.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +19,15 @@ class AuthViewModel @Inject constructor(
     private val repo: AuthRepository
 ) : ViewModel() {
 
+    // --- Currently logged-in user info ---
+    var currentUserId: Int? by mutableStateOf(null)
+        private set
+    var currentUsername: String? by mutableStateOf(null)
+        private set
+    var currentUserRole: UserRole? by mutableStateOf(null)
+        private set
+
+    // --- Registration ---
     fun registerStudent(student: StudentEntity) {
         viewModelScope.launch {
             repo.registerStudent(student)
@@ -30,6 +40,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    // --- Login ---
     var loginState by mutableStateOf<LoginState>(LoginState.Idle)
         private set
 
@@ -37,19 +48,27 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             loginState = LoginState.Loading
             val result = repo.login(username, password)
-            loginState = if (result != null) {
-                LoginState.Success(result)
+            if (result != null) {
+                // Save current user info for screens
+                currentUserId = result.userId
+                currentUsername = result.username
+                currentUserRole = result.role
+                loginState = LoginState.Success(result)
             } else {
-                LoginState.Error("Invalid credentials")
+                loginState = LoginState.Error("Invalid credentials")
             }
         }
     }
 
+    // --- Logout ---
     fun logout() {
+        currentUserId = null
+        currentUserRole = null
         loginState = LoginState.Idle
     }
 }
 
+// --- Login states ---
 sealed class LoginState {
     object Idle : LoginState()
     object Loading : LoginState()

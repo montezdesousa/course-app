@@ -1,5 +1,6 @@
 package com.tumme.scrudstudents.ui.screens.auth
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,6 +10,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.Gender
+import com.tumme.scrudstudents.data.local.model.LevelCourse
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
 import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
@@ -19,7 +21,7 @@ enum class UserRole { STUDENT, TEACHER }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
     onRegisterSuccess: () -> Unit = {}
 ) {
     var firstName by remember { mutableStateOf("") }
@@ -29,6 +31,11 @@ fun RegisterScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var selectedRole by remember { mutableStateOf(UserRole.STUDENT) }
     var gender by remember { mutableStateOf(Gender.Male) }
+    var levelOfStudy by remember { mutableStateOf(LevelCourse.P1) }
+
+    // Dropdown expansion states
+    var genderExpanded by remember { mutableStateOf(false) }
+    var levelExpanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -108,21 +115,73 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // --- Gender ---
-        Text("Gender")
-        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-            Gender.entries.forEach { g ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                ) {
-                    RadioButton(selected = gender == g, onClick = { gender = g })
-                    Text(g.name)
+        // --- Gender Dropdown ---
+        ExposedDropdownMenuBox(
+            expanded = genderExpanded,
+            onExpandedChange = { genderExpanded = !genderExpanded }
+        ) {
+            OutlinedTextField(
+                value = gender.name,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Gender") },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = genderExpanded) },
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
+            )
+            ExposedDropdownMenu(
+                expanded = genderExpanded,
+                onDismissRequest = { genderExpanded = false }
+            ) {
+                Gender.entries.forEach { g ->
+                    DropdownMenuItem(
+                        text = { Text(g.name) },
+                        onClick = {
+                            gender = g
+                            genderExpanded = false
+                        }
+                    )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // --- Level of Study Dropdown (only for students) ---
+        if (selectedRole == UserRole.STUDENT) {
+            ExposedDropdownMenuBox(
+                expanded = levelExpanded,
+                onExpandedChange = { levelExpanded = !levelExpanded }
+            ) {
+                OutlinedTextField(
+                    value = levelOfStudy.value,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Level of Study") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = levelExpanded) },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                )
+                ExposedDropdownMenu(
+                    expanded = levelExpanded,
+                    onDismissRequest = { levelExpanded = false }
+                ) {
+                    LevelCourse.entries.forEach { level ->
+                        DropdownMenuItem(
+                            text = { Text(level.value) },
+                            onClick = {
+                                levelOfStudy = level
+                                levelExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
         // --- Register button ---
         Button(
@@ -133,7 +192,7 @@ fun RegisterScreen(
                     firstName.isNotBlank() &&
                     lastName.isNotBlank()
                 ) {
-                    val dob = Date() // use current date for now
+                    val dob = Date() // placeholder
 
                     if (selectedRole == UserRole.STUDENT) {
                         val student = StudentEntity(
@@ -143,9 +202,10 @@ fun RegisterScreen(
                             lastName = lastName,
                             dateOfBirth = dob,
                             gender = gender,
+                            levelOfStudy = levelOfStudy,
                             photoUri = null
                         )
-                        viewModel.registerStudent(student)
+                        authViewModel.registerStudent(student)
                     } else {
                         val teacher = TeacherEntity(
                             username = username,
@@ -156,7 +216,7 @@ fun RegisterScreen(
                             gender = gender,
                             photoUri = null
                         )
-                        viewModel.registerTeacher(teacher)
+                        authViewModel.registerTeacher(teacher)
                     }
 
                     onRegisterSuccess()
@@ -164,7 +224,7 @@ fun RegisterScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Register as ${selectedRole.name.lowercase().replaceFirstChar { it.uppercase() }}")
+            Text("Register")
         }
     }
 }

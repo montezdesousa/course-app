@@ -18,6 +18,7 @@ class AuthRepository @Inject constructor(
      */
     data class AuthResult(
         val userId: Int,
+        val username: String,
         val role: UserRole
     )
 
@@ -30,13 +31,13 @@ class AuthRepository @Inject constructor(
         // 1. Check Student table
         val student = studentDao.getStudentByUsernameAndPassword(username, password)
         if (student != null) {
-            return AuthResult(student.idStudent, UserRole.STUDENT)
+            return AuthResult(student.idStudent, username, UserRole.STUDENT)
         }
 
         // 2. Check Teacher table
         val teacher = teacherDao.getTeacherByUsernameAndPassword(username, password)
         if (teacher != null) {
-            return AuthResult(teacher.idTeacher, UserRole.TEACHER)
+            return AuthResult(teacher.idTeacher, username, UserRole.TEACHER)
         }
 
         return null // Login failed

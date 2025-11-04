@@ -12,8 +12,8 @@ import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeacherGradeEntryScreen(
+    authViewModel: AuthViewModel = hiltViewModel(),
     viewModel: AuthViewModel = hiltViewModel(),
-    userId: String?, // Logged-in student ID
     onLogoutNavigate: () -> Unit = {}
 ) {
     Column(
