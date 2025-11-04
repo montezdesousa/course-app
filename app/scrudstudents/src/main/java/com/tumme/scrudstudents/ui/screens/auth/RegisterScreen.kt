@@ -22,11 +22,13 @@ fun RegisterScreen(
     viewModel: AuthViewModel = hiltViewModel(),
     onRegisterSuccess: () -> Unit = {}
 ) {
-    var fullName by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var selectedRole by remember { mutableStateOf(UserRole.STUDENT) }
+    var gender by remember { mutableStateOf(Gender.Male) }
 
     Column(
         modifier = Modifier
@@ -36,7 +38,6 @@ fun RegisterScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Create Account", style = MaterialTheme.typography.headlineMedium)
-
         Spacer(modifier = Modifier.height(16.dp))
 
         // --- Role selector ---
@@ -44,26 +45,32 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            RoleRadioButton(
-                selected = selectedRole == UserRole.STUDENT,
-                text = "Student",
-                onSelect = { selectedRole = UserRole.STUDENT }
-            )
+            RoleRadioButton(selected = selectedRole == UserRole.STUDENT, text = "Student") {
+                selectedRole = UserRole.STUDENT
+            }
             Spacer(modifier = Modifier.width(16.dp))
-            RoleRadioButton(
-                selected = selectedRole == UserRole.TEACHER,
-                text = "Teacher",
-                onSelect = { selectedRole = UserRole.TEACHER }
-            )
+            RoleRadioButton(selected = selectedRole == UserRole.TEACHER, text = "Teacher") {
+                selectedRole = UserRole.TEACHER
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Full name ---
+        // --- First Name ---
         OutlinedTextField(
-            value = fullName,
-            onValueChange = { fullName = it },
-            label = { Text("Full Name") },
+            value = firstName,
+            onValueChange = { firstName = it },
+            label = { Text("First Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // --- Last Name ---
+        OutlinedTextField(
+            value = lastName,
+            onValueChange = { lastName = it },
+            label = { Text("Last Name") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -90,7 +97,7 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // --- Confirm password ---
+        // --- Confirm Password ---
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
@@ -99,14 +106,34 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // --- Gender ---
+        Text("Gender")
+        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+            Gender.values().forEach { g ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    RadioButton(selected = gender == g, onClick = { gender = g })
+                    Text(g.name)
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         // --- Register button ---
         Button(
             onClick = {
-                if (password == confirmPassword && username.isNotBlank()) {
-                    val firstName = fullName.substringBeforeLast(" ", fullName)
-                    val lastName = fullName.substringAfterLast(" ", "")
+                if (
+                    password == confirmPassword &&
+                    username.isNotBlank() &&
+                    firstName.isNotBlank() &&
+                    lastName.isNotBlank()
+                ) {
+                    val dob = Date() // use current date for now
 
                     if (selectedRole == UserRole.STUDENT) {
                         val student = StudentEntity(
@@ -114,8 +141,8 @@ fun RegisterScreen(
                             password = password,
                             firstName = firstName,
                             lastName = lastName,
-                            dateOfBirth = Date(),
-                            gender = Gender.Male
+                            dateOfBirth = dob,
+                            gender = gender
                         )
                         viewModel.registerStudent(student)
                     } else {
@@ -124,8 +151,9 @@ fun RegisterScreen(
                             password = password,
                             firstName = firstName,
                             lastName = lastName,
-                            dateOfBirth = Date(),
-                            gender = Gender.Male,
+                            dateOfBirth = dob,
+                            gender = gender,
+                            photoUri = null
                         )
                         viewModel.registerTeacher(teacher)
                     }
@@ -142,10 +170,7 @@ fun RegisterScreen(
 
 @Composable
 fun RoleRadioButton(selected: Boolean, text: String, onSelect: () -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(horizontal = 4.dp)
-    ) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 4.dp)) {
         RadioButton(selected = selected, onClick = onSelect)
         Text(text)
     }

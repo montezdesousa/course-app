@@ -44,6 +44,10 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+
+    fun logout() {
+        loginState = LoginState.Idle
+    }
 }
 
 sealed class LoginState {

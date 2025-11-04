@@ -10,12 +10,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 import com.tumme.scrudstudents.ui.viewmodel.LoginState
+import com.tumme.scrudstudents.data.local.model.UserRole
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel = hiltViewModel(),
-    onLoginSuccess: () -> Unit,
+    onStudentLogin: (Int) -> Unit,
+    onTeacherLogin: (Int) -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
@@ -79,9 +81,14 @@ fun LoginScreen(
             }
 
             is LoginState.Success -> {
-                // Navigate after successful login
-                LaunchedEffect(Unit) {
-                    onLoginSuccess()
+                val auth = state.authResult
+                LaunchedEffect(auth) {
+                    when (auth.role) {
+                        UserRole.STUDENT -> onStudentLogin(auth.userId)
+                        UserRole.TEACHER -> onTeacherLogin(auth.userId)
+                        UserRole.ADMIN -> TODO()
+                        UserRole.NONE -> TODO()
+                    }
                 }
             }
 
