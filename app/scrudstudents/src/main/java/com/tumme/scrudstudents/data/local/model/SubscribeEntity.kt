@@ -18,5 +18,5 @@ import androidx.room.ColumnInfo
 data class SubscribeEntity(
     val studentId: Int,
     val courseId: Int,
-    val score: Float
+    val score: Float? = null
 )

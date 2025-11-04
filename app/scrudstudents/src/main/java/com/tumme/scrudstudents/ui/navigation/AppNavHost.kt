@@ -15,9 +15,9 @@ import com.tumme.scrudstudents.ui.screens.student.StudentFinalGradeSummaryScreen
 import com.tumme.scrudstudents.ui.screens.student.StudentGradesScreen
 import com.tumme.scrudstudents.ui.screens.student.StudentSubscribeScreen
 import com.tumme.scrudstudents.ui.screens.teacher.TeacherCourseListScreen
-import com.tumme.scrudstudents.ui.screens.teacher.TeacherStudentListScreen
 import com.tumme.scrudstudents.ui.screens.teacher.TeacherGradeEntryScreen
 import com.tumme.scrudstudents.ui.screens.teacher.TeacherHomeScreen
+import com.tumme.scrudstudents.ui.screens.teacher.TeacherStudentListScreen
 
 @Composable
 fun AppNavHost() {
@@ -97,12 +97,6 @@ fun AppNavHost() {
         composable(Routes.STUDENT_SUBSCRIBE) {
             StudentSubscribeScreen(
                 authViewModel = authViewModel,
-                onLogoutNavigate = {
-                    authViewModel.logout()
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.STUDENT_SUBSCRIBE) { inclusive = true }
-                    }
-                }
             )
         }
 
@@ -149,12 +143,6 @@ fun AppNavHost() {
         composable(Routes.TEACHER_GRADE_ENTRY) {
             TeacherGradeEntryScreen(
                 authViewModel = authViewModel,
-                onLogoutNavigate = {
-                    authViewModel.logout()
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.TEACHER_HOME) { inclusive = true }
-                    }
-                }
             )
         }
     }

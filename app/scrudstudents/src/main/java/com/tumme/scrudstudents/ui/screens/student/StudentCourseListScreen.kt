@@ -3,13 +3,12 @@ package com.tumme.scrudstudents.ui.screens.student
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.ui.components.TableHeader
 import com.tumme.scrudstudents.data.local.model.LevelCourse
 import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 import com.tumme.scrudstudents.ui.viewmodel.CourseViewModel
@@ -21,17 +20,13 @@ fun StudentCourseListScreen(
     courseViewModel: CourseViewModel = hiltViewModel(),
 ) {
     val studentLevel = authViewModel.currentUserLevelOfStudy ?: LevelCourse.P1
-
-    // Fetch courses filtered by student level
-    val courses by courseViewModel.getCoursesByLevel(studentLevel)
+    val courses by courseViewModel.getCoursesByLevel(studentLevel.value)
         .collectAsState(initial = emptyList())
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
         Text(
             text = "Courses for ${studentLevel.value}",
@@ -42,20 +37,25 @@ fun StudentCourseListScreen(
         if (courses.isEmpty()) {
             Text("No courses available for your level.")
         } else {
+            TableHeader(
+                cells = listOf("Name", "ECTS", "Level"),
+                weights = listOf(0.5f, 0.25f, 0.25f)
+            )
+            Spacer(Modifier.height(8.dp))
+
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(courses) { course ->
-                    Card(
+                items(courses, key = { it.idCourse }) { course ->
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
-                        shape = RoundedCornerShape(8.dp)
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("Name: ${course.name}")
-                            Text("ECTS: ${course.ects}")
-                            Text("Level: ${course.level.value}")
-                        }
+                        Text(course.name, modifier = Modifier.weight(0.5f))
+                        Text(course.ects.toString(), modifier = Modifier.weight(0.25f))
+                        Text(course.level.value, modifier = Modifier.weight(0.25f))
                     }
+                    Divider()
                 }
             }
         }

@@ -1,16 +1,13 @@
 package com.tumme.scrudstudents.ui.screens.student
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tumme.scrudstudents.data.local.model.LevelCourse
+import com.tumme.scrudstudents.ui.components.TableHeader
 import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 import com.tumme.scrudstudents.ui.viewmodel.SubscribeViewModel
 
@@ -24,17 +21,23 @@ fun StudentFinalGradeSummaryScreen(
     val subscriptions by subscribeViewModel.getSubscribesByStudent(studentId).collectAsState(initial = emptyList())
     val courses by subscribeViewModel.courses.collectAsState()
 
-    val levelGrades = LevelCourse.entries.map { level ->
-        val levelCourses = subscriptions.mapNotNull { sub ->
-            courses.find { it.idCourse == sub.courseId && it.level == level }?.let { it to sub.score }
-        }
-
-        val totalEcts = levelCourses.sumOf { it.first.ects.toDouble() }
-        val weightedSum = levelCourses.sumOf { it.first.ects * it.second.toDouble() }
-
-        val average = if (totalEcts > 0) weightedSum / totalEcts else null
-        level to average
+    // Filter subscriptions that have a matching course and a non-null score
+    val gradedPairs = subscriptions.mapNotNull { sub ->
+        val course = courses.find { it.idCourse == sub.courseId }
+        val score = sub.score
+        if (course != null && score != null) {
+            course to score.toDouble()
+        } else null
     }
+
+    // Sum ECTS of graded courses
+    val gradedEctsTotal = gradedPairs.sumOf { it.first.ects.toDouble() }
+
+    // Weighted sum (ECTS * grade)
+    val weightedSum = gradedPairs.sumOf { it.first.ects * it.second }
+
+    // Weighted average
+    val weightedAverage = if (gradedEctsTotal > 0.0) weightedSum / gradedEctsTotal else null
 
     Column(
         modifier = Modifier
@@ -49,21 +52,34 @@ fun StudentFinalGradeSummaryScreen(
         if (subscriptions.isEmpty()) {
             Text("You are not enrolled in any courses yet.")
         } else {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(levelGrades) { (level, avg) ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("Level: ${level.value}")
-                            Text("Final Grade: ${avg?.let { String.format("%.2f", it) } ?: "No grades yet"}")
-                        }
-                    }
+            // Table header
+            TableHeader(
+                cells = listOf("Graded ECTS", "Weighted Average"),
+                weights = listOf(0.4f, 0.6f)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Single row showing totals
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val ectsDisplay = if (gradedEctsTotal % 1.0 == 0.0) {
+                    gradedEctsTotal.toInt().toString()
+                } else {
+                    String.format("%.2f", gradedEctsTotal)
                 }
+                Text(ectsDisplay, modifier = Modifier.weight(0.4f))
+
+                Text(
+                    text = weightedAverage?.let { String.format("%.2f", it) } ?: "-",
+                    modifier = Modifier.weight(0.6f)
+                )
             }
+            Divider()
         }
     }
 }
+

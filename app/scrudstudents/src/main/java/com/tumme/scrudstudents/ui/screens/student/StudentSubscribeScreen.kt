@@ -1,113 +1,157 @@
 package com.tumme.scrudstudents.ui.screens.student
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.ui.components.TableHeader
 import com.tumme.scrudstudents.data.local.model.LevelCourse
+import com.tumme.scrudstudents.data.local.model.SubscribeEntity
 import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
-import com.tumme.scrudstudents.ui.viewmodel.StudentViewModel
+import com.tumme.scrudstudents.ui.viewmodel.SubscribeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentSubscribeScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
-    studentCourseViewModel: StudentViewModel = hiltViewModel(),
-    onLogoutNavigate: () -> Unit = {}
+    subscribeViewModel: SubscribeViewModel = hiltViewModel(),
 ) {
     val studentId = authViewModel.currentUserId ?: return
     val studentLevel = authViewModel.currentUserLevelOfStudy ?: LevelCourse.P1
 
-    // Courses student is enrolled in
-    val enrolledCourses by studentCourseViewModel.getEnrolledCourses(studentId)
+    val enrolledCourses by subscribeViewModel.getEnrolledCourses(studentId)
         .collectAsState(initial = emptyList())
 
-    // Courses available to enroll (filtered by student's level)
-    val availableCourses by studentCourseViewModel.getAvailableCourses(studentId, studentLevel)
+    val availableCourses by subscribeViewModel.getAvailableCourses(studentId, studentLevel)
         .collectAsState(initial = emptyList())
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // --- Enrolled Courses ---
-        Text("My Enrolled Courses", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
+    var showEnrollDialog by remember { mutableStateOf(false) }
+    var selectedCourseForEnroll by remember { mutableStateOf<SubscribeEntity?>(null) }
 
-        if (enrolledCourses.isEmpty()) {
-            Text("You are not enrolled in any courses yet.")
-        } else {
-            LazyColumn(modifier = Modifier.height(200.dp)) {
-                items(enrolledCourses) { course ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("Name: ${course.name}")
-                            Text("ECTS: ${course.ects}")
-                            Text("Level: ${course.level.value}")
-                        }
-                    }
-                }
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("My Subscriptions") }) },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { showEnrollDialog = true }) {
+                Icon(Icons.Default.Add, contentDescription = "Enroll in new course")
             }
         }
+    ) { padding ->
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // --- Available Courses to Enroll ---
-        Text("Available Courses for Your Level", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (availableCourses.isEmpty()) {
-            Text("No courses available for enrollment at your level.")
-        } else {
-            LazyColumn(modifier = Modifier.height(200.dp)) {
-                items(availableCourses) { course ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                            .clickable {
-                                // Enroll student in course
-                                studentCourseViewModel.enrollStudent(studentId, course.idCourse)
-                            },
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("Name: ${course.name}")
-                            Text("ECTS: ${course.ects}")
-                            Text("Level: ${course.level.value}")
-                            Text("Click to enroll", style = MaterialTheme.typography.bodySmall)
-                        }
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // --- Logout ---
-        Button(
-            onClick = {
-                authViewModel.logout()
-                onLogoutNavigate()
-            },
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
         ) {
-            Text("Logout")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("My Courses", style = MaterialTheme.typography.titleMedium)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (enrolledCourses.isEmpty()) {
+                Text("You are not enrolled in any courses yet.")
+            } else {
+                TableHeader(
+                    cells = listOf("Name", "ECTS", "Level", "Action"),
+                    weights = listOf(0.45f, 0.2f, 0.2f, 0.15f)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                LazyColumn {
+                    items(enrolledCourses, key = { it.idCourse }) { course ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(course.name, modifier = Modifier.weight(0.45f))
+                            Text(course.ects.toString(), modifier = Modifier.weight(0.2f))
+                            Text(course.level.value, modifier = Modifier.weight(0.2f))
+                            IconButton(
+                                onClick = {
+                                    val subscribe = SubscribeEntity(
+                                        studentId = studentId,
+                                        courseId = course.idCourse,
+                                    )
+                                    subscribeViewModel.deleteSubscribe(subscribe)
+                                },
+                                modifier = Modifier.weight(0.15f)
+                            ) {
+                                Icon(Icons.Default.Delete, contentDescription = "Unenroll")
+                            }
+                        }
+                        Divider()
+                    }
+                }
+            }
+
+            if (showEnrollDialog) {
+                AlertDialog(
+                    onDismissRequest = { showEnrollDialog = false },
+                    title = { Text("Enroll in a course") },
+                    text = {
+                        Column {
+                            var expanded by remember { mutableStateOf(false) }
+                            var selectedCourse by remember { mutableStateOf("") }
+
+                            OutlinedTextField(
+                                value = selectedCourse,
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text("Select Course") },
+                                trailingIcon = {
+                                    IconButton(onClick = { expanded = !expanded }) {
+                                        Icon(Icons.Default.Add, contentDescription = "Select course")
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                availableCourses.forEach { course ->
+                                    DropdownMenuItem(
+                                        text = { Text(course.name) },
+                                        onClick = {
+                                            selectedCourse = course.name
+                                            selectedCourseForEnroll = SubscribeEntity(
+                                                studentId = studentId,
+                                                courseId = course.idCourse,
+                                            )
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            selectedCourseForEnroll?.let { subscribeViewModel.insertSubscribe(it) }
+                            showEnrollDialog = false
+                            selectedCourseForEnroll = null
+                        }) { Text("Enroll") }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showEnrollDialog = false }) { Text("Cancel") }
+                    }
+                )
+            }
         }
     }
 }

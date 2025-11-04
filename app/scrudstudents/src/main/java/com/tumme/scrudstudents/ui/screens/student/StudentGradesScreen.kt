@@ -3,13 +3,12 @@ package com.tumme.scrudstudents.ui.screens.student
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.ui.components.TableHeader
 import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 import com.tumme.scrudstudents.ui.viewmodel.SubscribeViewModel
 
@@ -20,37 +19,50 @@ fun StudentGradesScreen(
     subscribeViewModel: SubscribeViewModel = hiltViewModel(),
 ) {
     val studentId = authViewModel.currentUserId ?: return
-    val subscriptions by subscribeViewModel.getSubscribesByStudent(studentId).collectAsState(initial = emptyList())
+    val subscriptions by subscribeViewModel.getSubscribesByStudent(studentId)
+        .collectAsState(initial = emptyList())
     val courses by subscribeViewModel.courses.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
-        Text(text = "My Grades", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = "My Grades",
+            style = MaterialTheme.typography.headlineMedium
+        )
         Spacer(modifier = Modifier.height(16.dp))
+
         if (subscriptions.isEmpty()) {
             Text("You are not enrolled in any courses yet.")
         } else {
+            // --- Table Header ---
+            TableHeader(
+                cells = listOf("Course Name", "Level", "Grade"),
+                weights = listOf(0.5f, 0.25f, 0.25f)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // --- Table Rows ---
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(subscriptions) { sub ->
+                items(subscriptions, key = { it.courseId }) { sub ->
                     val course = courses.find { it.idCourse == sub.courseId }
                     if (course != null) {
-                        Card(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp),
-                            shape = RoundedCornerShape(8.dp)
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text("Course: ${course.name}")
-                                Text("Level: ${course.level.value}")
-                                Text("Grade: ${if (sub.score >= 0f) sub.score.toString() else "Not graded yet"}")
-                            }
+                            Text(course.name, modifier = Modifier.weight(0.5f))
+                            Text(course.level.value, modifier = Modifier.weight(0.25f))
+                            Text(
+                                if (sub.score != null) sub.score.toString() else "Not graded yet",
+                                modifier = Modifier.weight(0.25f)
+                            )
                         }
+                        Divider()
                     }
                 }
             }

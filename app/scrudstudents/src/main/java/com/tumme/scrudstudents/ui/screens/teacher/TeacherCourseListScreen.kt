@@ -1,17 +1,17 @@
 package com.tumme.scrudstudents.ui.screens.teacher
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.ui.components.TableHeader
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import com.tumme.scrudstudents.data.local.model.LevelCourse
 import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
@@ -48,20 +48,31 @@ fun TeacherCourseListScreen(
             if (courses.isEmpty()) {
                 Text("No courses yet. Click + to add one.")
             } else {
-                LazyColumn {
+                TableHeader(
+                    cells = listOf("Name", "ECTS", "Level", "Actions"),
+                    weights = listOf(0.4f, 0.2f, 0.2f, 0.2f)
+                )
+                Spacer(Modifier.height(8.dp))
+
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(courses) { course ->
-                        Card(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp),
-                            shape = RoundedCornerShape(8.dp)
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text("Name: ${course.name}")
-                                Text("ECTS: ${course.ects}")
-                                Text("Level: ${course.level.value}")
+                            Text(course.name, modifier = Modifier.weight(0.4f))
+                            Text(course.ects.toString(), modifier = Modifier.weight(0.2f))
+                            Text(course.level.value, modifier = Modifier.weight(0.2f))
+                            IconButton(
+                                onClick = { teacherViewModel.deleteCourse(course) },
+                                modifier = Modifier.weight(0.2f)
+                            ) {
+                                Icon(Icons.Default.Delete, contentDescription = "Delete course")
                             }
                         }
+                        Divider()
                     }
                 }
             }
@@ -86,23 +97,28 @@ fun TeacherCourseListScreen(
                         label = { Text("ECTS") },
                         modifier = Modifier.fillMaxWidth()
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    // Fixed dropdown inside dialog
                     var expanded by remember { mutableStateOf(false) }
-                    Box {
+                    Box(modifier = Modifier.fillMaxWidth()) {
                         OutlinedTextField(
                             value = newCourseLevel.value,
                             onValueChange = {},
                             readOnly = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { expanded = true },
-                            label = { Text("Level") }
+                            label = { Text("Level") },
+                            trailingIcon = {
+                                IconButton(onClick = { expanded = !expanded }) {
+                                    Icon(Icons.Default.Add, contentDescription = "Select level")
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
                         )
+
                         DropdownMenu(
                             expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             LevelCourse.entries.forEach { level ->
                                 DropdownMenuItem(
@@ -135,9 +151,7 @@ fun TeacherCourseListScreen(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
-                    Text("Cancel")
-                }
+                TextButton(onClick = { showDialog = false }) { Text("Cancel") }
             }
         )
     }

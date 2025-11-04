@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,7 +41,12 @@ class CourseViewModel @Inject constructor(
 
     suspend fun findCourse(id: Int) = repo.getCourseById(id)
 
-    fun getCoursesByLevel(level: LevelCourse) =
-        repo.getCoursesByLevel(level.value)
-            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    fun getCoursesByLevel(level: String): StateFlow<List<CourseEntity>> =
+        repo.getCoursesByLevel(level)
+            .distinctUntilChanged()
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                emptyList()
+            )
 }

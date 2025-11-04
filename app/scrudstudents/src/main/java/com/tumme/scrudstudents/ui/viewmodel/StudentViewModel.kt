@@ -2,10 +2,8 @@ package com.tumme.scrudstudents.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tumme.scrudstudents.data.local.model.CourseEntity
-import com.tumme.scrudstudents.data.local.model.LevelCourse
-import com.tumme.scrudstudents.data.repository.CourseRepository
-import com.tumme.scrudstudents.data.repository.SubscribeRepository
+import com.tumme.scrudstudents.data.local.model.StudentEntity
+import com.tumme.scrudstudents.data.repository.StudentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,34 +11,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StudentViewModel @Inject constructor(
-    private val courseRepo: CourseRepository,
-    private val subscribeRepo: SubscribeRepository
+    private val studentRepo: StudentRepository
 ) : ViewModel() {
 
-    // Courses the student is enrolled in
-    fun getEnrolledCourses(studentId: Int): Flow<List<CourseEntity>> =
-        subscribeRepo.getSubscribesByStudent(studentId)
-            .combine(courseRepo.getAllCourses()) { subscribes, courses ->
-                courses.filter { course ->
-                    subscribes.any { it.courseId == course.idCourse }
-                }
-            }
+    // --- All students as StateFlow ---
+    val students: StateFlow<List<StudentEntity>> =
+        studentRepo.getAllStudents()
+            .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    fun getAvailableCourses(studentId: Int, level: LevelCourse): Flow<List<CourseEntity>> =
-        courseRepo.getCoursesByLevel(level.value)
-            .combine(subscribeRepo.getSubscribesByStudent(studentId)) { courses, subscribes ->
-                courses.filter { course ->
-                    subscribes.none { it.courseId == course.idCourse }
-                }
-            }
+    private val _events = MutableSharedFlow<String>()
+    val events = _events.asSharedFlow()
 
-    fun enrollStudent(studentId: Int, courseId: Int) = viewModelScope.launch {
-        subscribeRepo.insertSubscribe(
-            com.tumme.scrudstudents.data.local.model.SubscribeEntity(
-                studentId = studentId,
-                courseId = courseId,
-                score = 0f // initial score
-            )
-        )
+    // --- Fetch student by ID as suspend function ---
+    suspend fun getStudentById(studentId: Int): StudentEntity? {
+        return studentRepo.getStudentById(studentId)
+    }
+
+    // --- Optional: fetch student by ID as Flow ---
+    fun getStudentByIdFlow(studentId: Int): Flow<StudentEntity?> = flow {
+        emit(studentRepo.getStudentById(studentId))
+    }
+
+    // --- CRUD operations ---
+    fun insertStudent(student: StudentEntity) = viewModelScope.launch {
+        studentRepo.insertStudent(student)
+        _events.emit("Student saved")
+    }
+
+    fun deleteStudent(student: StudentEntity) = viewModelScope.launch {
+        studentRepo.deleteStudent(student)
+        _events.emit("Student deleted")
     }
 }
