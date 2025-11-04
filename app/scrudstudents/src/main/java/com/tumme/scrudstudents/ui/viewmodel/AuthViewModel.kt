@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
 import com.tumme.scrudstudents.data.local.model.UserRole
+import com.tumme.scrudstudents.data.local.model.LevelCourse
 import com.tumme.scrudstudents.data.repository.AuthRepository
 import com.tumme.scrudstudents.data.repository.AuthRepository.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,9 @@ class AuthViewModel @Inject constructor(
         private set
     var currentUserRole: UserRole? by mutableStateOf(null)
         private set
+    var currentUserLevelOfStudy: LevelCourse? by mutableStateOf(null)
+        private set
+
 
     // --- Registration ---
     fun registerStudent(student: StudentEntity) {
@@ -53,6 +57,7 @@ class AuthViewModel @Inject constructor(
                 currentUserId = result.userId
                 currentUsername = result.username
                 currentUserRole = result.role
+                currentUserLevelOfStudy = result.levelOfStudy
                 loginState = LoginState.Success(result)
             } else {
                 loginState = LoginState.Error("Invalid credentials")

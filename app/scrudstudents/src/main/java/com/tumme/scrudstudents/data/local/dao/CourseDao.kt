@@ -21,4 +21,6 @@ interface CourseDao {
     @Query("SELECT * FROM courses WHERE teacherId = :teacherId ORDER BY name")
     fun getCoursesByTeacher(teacherId: String): Flow<List<CourseEntity>>
 
+    @Query("SELECT * FROM courses WHERE level = :level")
+    fun getCoursesByLevel(level: String): Flow<List<CourseEntity>>
 }

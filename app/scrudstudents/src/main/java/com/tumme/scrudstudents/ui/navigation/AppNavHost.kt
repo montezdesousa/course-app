@@ -11,6 +11,7 @@ import com.tumme.scrudstudents.ui.screens.auth.RegisterScreen
 import com.tumme.scrudstudents.ui.screens.auth.SplashScreen
 import com.tumme.scrudstudents.ui.screens.student.StudentHomeScreen
 import com.tumme.scrudstudents.ui.screens.student.StudentCourseListScreen
+import com.tumme.scrudstudents.ui.screens.student.StudentFinalGradeSummaryScreen
 import com.tumme.scrudstudents.ui.screens.student.StudentGradesScreen
 import com.tumme.scrudstudents.ui.screens.student.StudentSubscribeScreen
 import com.tumme.scrudstudents.ui.screens.teacher.TeacherCourseListScreen
@@ -77,6 +78,7 @@ fun AppNavHost() {
                 onNavigateToCourses = { navController.navigate(Routes.STUDENT_COURSE) },
                 onNavigateToSubscriptions = { navController.navigate(Routes.STUDENT_SUBSCRIBE) },
                 onNavigateToGrades = { navController.navigate(Routes.STUDENT_GRADES) },
+                onNavigateToFinalGradeSummary = {navController.navigate(Routes.STUDENT_FINAL_GRADE_SUMMARY)},
                 onLogoutNavigate = {
                     authViewModel.logout()
                     navController.navigate(Routes.LOGIN) {
@@ -89,12 +91,6 @@ fun AppNavHost() {
         composable(Routes.STUDENT_COURSE) {
             StudentCourseListScreen(
                 authViewModel = authViewModel,
-                onLogoutNavigate = {
-                    authViewModel.logout()
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.STUDENT_COURSE) { inclusive = true }
-                    }
-                }
             )
         }
 
@@ -113,12 +109,12 @@ fun AppNavHost() {
         composable(Routes.STUDENT_GRADES) {
             StudentGradesScreen(
                 authViewModel = authViewModel,
-                onLogoutNavigate = {
-                    authViewModel.logout()
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.STUDENT_GRADES) { inclusive = true }
-                    }
-                }
+            )
+        }
+
+        composable(Routes.STUDENT_FINAL_GRADE_SUMMARY) {
+            StudentFinalGradeSummaryScreen(
+                authViewModel = authViewModel,
             )
         }
 
@@ -141,24 +137,12 @@ fun AppNavHost() {
         composable(Routes.TEACHER_COURSE_LIST) {
             TeacherCourseListScreen(
                 authViewModel = authViewModel,
-                onLogoutNavigate = {
-                    authViewModel.logout()
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.TEACHER_COURSE_LIST) { inclusive = true }
-                    }
-                }
             )
         }
 
         composable(Routes.TEACHER_STUDENT_LIST) {
             TeacherStudentListScreen(
                 authViewModel = authViewModel,
-                onLogoutNavigate = {
-                    authViewModel.logout()
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.TEACHER_HOME) { inclusive = true }
-                    }
-                }
             )
         }
 

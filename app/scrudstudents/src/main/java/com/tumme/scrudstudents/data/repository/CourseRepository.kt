@@ -11,4 +11,6 @@ class CourseRepository(
     suspend fun insertCourse(course: CourseEntity) = courseDao.insert(course)
     suspend fun deleteCourse(course: CourseEntity) = courseDao.delete(course)
     suspend fun getCourseById(id: Int) = courseDao.getCourseById(id)
+    fun getCoursesByLevel(level: String): Flow<List<CourseEntity>> =
+        courseDao.getCoursesByLevel(level)
 }

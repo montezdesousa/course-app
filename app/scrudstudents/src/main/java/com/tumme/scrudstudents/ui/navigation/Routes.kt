@@ -10,6 +10,8 @@ object Routes {
     const val STUDENT_COURSE = "student_course"
     const val STUDENT_SUBSCRIBE = "student_subscriptions"
     const val STUDENT_GRADES = "student_grades"
+    const val STUDENT_FINAL_GRADE_SUMMARY = "student_final_grade_summary"
+
 
     // teacher
     const val TEACHER_HOME = "teacher_home"

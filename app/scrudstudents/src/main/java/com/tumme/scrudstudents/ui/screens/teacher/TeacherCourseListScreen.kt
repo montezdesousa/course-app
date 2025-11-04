@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,36 +21,18 @@ import com.tumme.scrudstudents.ui.viewmodel.TeacherViewModel
 @Composable
 fun TeacherCourseListScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
-    teacherViewModel: TeacherViewModel = hiltViewModel(),
-    onLogoutNavigate: () -> Unit = {}
+    teacherViewModel: TeacherViewModel = hiltViewModel()
 ) {
-    val userId = authViewModel.currentUserId
-
-    if (userId == null) {
-        Text("No user logged in.")
-        return
-    }
-
-    // Collect courses for this teacher
+    val userId = authViewModel.currentUserId ?: return
     val courses by teacherViewModel.getCoursesForTeacher(userId).collectAsState(initial = emptyList())
 
-    // Dialog and form states
     var showDialog by remember { mutableStateOf(false) }
     var newCourseName by remember { mutableStateOf("") }
     var newCourseEcts by remember { mutableStateOf("") }
     var newCourseLevel by remember { mutableStateOf(LevelCourse.P1) }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("My Courses") },
-                actions = {
-                    TextButton(onClick = onLogoutNavigate) {
-                        Text("Logout", color = MaterialTheme.colorScheme.onPrimary)
-                    }
-                }
-            )
-        },
+        topBar = { TopAppBar(title = { Text("My Courses") }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Add course")
@@ -87,7 +68,6 @@ fun TeacherCourseListScreen(
         }
     }
 
-    // --- Add Course Dialog ---
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
@@ -109,7 +89,6 @@ fun TeacherCourseListScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Level Dropdown
                     var expanded by remember { mutableStateOf(false) }
                     Box {
                         OutlinedTextField(
@@ -140,7 +119,6 @@ fun TeacherCourseListScreen(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    // Add the new course assigned to the current teacher
                     val course = CourseEntity(
                         name = newCourseName,
                         ects = newCourseEcts.toFloatOrNull() ?: 0f,
@@ -148,7 +126,6 @@ fun TeacherCourseListScreen(
                         teacherId = userId
                     )
                     teacherViewModel.addCourse(course)
-
                     newCourseName = ""
                     newCourseEcts = ""
                     newCourseLevel = LevelCourse.P1

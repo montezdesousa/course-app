@@ -2,6 +2,7 @@ package com.tumme.scrudstudents.data.repository
 
 import com.tumme.scrudstudents.data.local.dao.StudentDao
 import com.tumme.scrudstudents.data.local.dao.TeacherDao
+import com.tumme.scrudstudents.data.local.model.LevelCourse
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
 import com.tumme.scrudstudents.data.local.model.UserRole
@@ -19,7 +20,8 @@ class AuthRepository @Inject constructor(
     data class AuthResult(
         val userId: Int,
         val username: String,
-        val role: UserRole
+        val role: UserRole,
+        val levelOfStudy: LevelCourse? = null
     )
 
     /**
@@ -31,7 +33,7 @@ class AuthRepository @Inject constructor(
         // 1. Check Student table
         val student = studentDao.getStudentByUsernameAndPassword(username, password)
         if (student != null) {
-            return AuthResult(student.idStudent, username, UserRole.STUDENT)
+            return AuthResult(student.idStudent, username, UserRole.STUDENT, student.levelOfStudy)
         }
 
         // 2. Check Teacher table

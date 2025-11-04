@@ -18,6 +18,7 @@ fun StudentHomeScreen(
     onNavigateToCourses: () -> Unit = {},
     onNavigateToSubscriptions: () -> Unit = {},
     onNavigateToGrades: () -> Unit = {},
+    onNavigateToFinalGradeSummary: () -> Unit = {},
     onLogoutNavigate: () -> Unit = {}
 ) {
     Column(
@@ -27,10 +28,13 @@ fun StudentHomeScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Welcome, ${authViewModel.currentUsername}!", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = "Welcome, ${authViewModel.currentUsername}!",
+            style = MaterialTheme.typography.headlineMedium
+        )
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Courses
+        // Courses (filtered by student level)
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,6 +70,19 @@ fun StudentHomeScreen(
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
                 Text("My Grades")
+            }
+        }
+
+        // Final Grade Summary
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+                .clickable { onNavigateToFinalGradeSummary() },
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Box(modifier = Modifier.padding(16.dp)) {
+                Text("Final Grade Summary")
             }
         }
 

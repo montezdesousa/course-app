@@ -3,6 +3,7 @@ package com.tumme.scrudstudents.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tumme.scrudstudents.data.local.model.CourseEntity
+import com.tumme.scrudstudents.data.local.model.LevelCourse
 import com.tumme.scrudstudents.data.repository.CourseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,4 +40,7 @@ class CourseViewModel @Inject constructor(
 
     suspend fun findCourse(id: Int) = repo.getCourseById(id)
 
+    fun getCoursesByLevel(level: LevelCourse) =
+        repo.getCoursesByLevel(level.value)
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
