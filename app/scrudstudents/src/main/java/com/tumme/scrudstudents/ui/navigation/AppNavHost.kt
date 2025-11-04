@@ -8,7 +8,13 @@ import com.tumme.scrudstudents.ui.screens.auth.LoginScreen
 import com.tumme.scrudstudents.ui.screens.auth.RegisterScreen
 import com.tumme.scrudstudents.ui.screens.auth.SplashScreen
 import com.tumme.scrudstudents.ui.screens.student.StudentHomeScreen
+import com.tumme.scrudstudents.ui.screens.student.StudentCourseListScreen
+import com.tumme.scrudstudents.ui.screens.student.StudentGradesScreen
+import com.tumme.scrudstudents.ui.screens.student.StudentSubscribeScreen
+import com.tumme.scrudstudents.ui.screens.teacher.TeacherCourseListScreen
+import com.tumme.scrudstudents.ui.screens.teacher.TeacherGradeEntryScreen
 import com.tumme.scrudstudents.ui.screens.teacher.TeacherHomeScreen
+import com.tumme.scrudstudents.ui.screens.teacher.TeacherStudentListScreen
 
 @Composable
 fun AppNavHost() {
@@ -54,11 +60,14 @@ fun AppNavHost() {
             )
         }
 
-        // Student Home
+        // Student
         composable("${Routes.STUDENT_HOME}/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")
             StudentHomeScreen(
                 userId = userId,
+                onNavigateToCourses = { userId?.let { navController.navigate("${Routes.STUDENT_COURSE}/$it") } },
+                onNavigateToSubscriptions = { userId?.let { navController.navigate("${Routes.STUDENT_SUBSCRIBE}/$it") } },
+                onNavigateToGrades = { userId?.let { navController.navigate("${Routes.STUDENT_GRADES}/$it") } },
                 onLogoutNavigate = {
                     navController.navigate(Routes.LOGIN) {
                         popUpTo(Routes.STUDENT_HOME) { inclusive = true }
@@ -67,17 +76,46 @@ fun AppNavHost() {
             )
         }
 
+        composable("${Routes.STUDENT_COURSE}/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")
+            StudentCourseListScreen(userId = userId)
+        }
+
+        composable("${Routes.STUDENT_SUBSCRIBE}/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")
+            StudentSubscribeScreen(userId = userId)
+        }
+
+        composable("${Routes.STUDENT_GRADES}/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")
+            StudentGradesScreen(userId = userId)
+        }
+
         // Teacher Home
         composable("${Routes.TEACHER_HOME}/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")
             TeacherHomeScreen(
                 userId = userId,
-                onLogoutNavigate = {
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.TEACHER_HOME) { inclusive = true }
-                    }
-                }
+                onNavigateToDeclareCourses = { navController.navigate("${Routes.TEACHER_COURSE_LIST}/$it") },
+                onNavigateToEnterGrades = { navController.navigate("${Routes.TEACHER_GRADE_ENTRY}/$it") },
+                onNavigateToViewEnrolledStudents = { navController.navigate("${Routes.TEACHER_STUDENT_LIST}/$it") },
+                onLogoutNavigate = { navController.navigate(Routes.LOGIN) { popUpTo(Routes.TEACHER_HOME) { inclusive = true } } }
             )
+        }
+
+        composable("${Routes.TEACHER_COURSE_LIST}/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")
+            TeacherCourseListScreen(userId = userId)
+        }
+
+        composable("${Routes.TEACHER_STUDENT_LIST}/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")
+            TeacherStudentListScreen(userId = userId)
+        }
+
+        composable("${Routes.TEACHER_GRADE_ENTRY}/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")
+            TeacherGradeEntryScreen(userId = userId)
         }
     }
 }

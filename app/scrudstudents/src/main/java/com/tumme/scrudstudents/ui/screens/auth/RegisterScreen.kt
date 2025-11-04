@@ -111,7 +111,7 @@ fun RegisterScreen(
         // --- Gender ---
         Text("Gender")
         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-            Gender.values().forEach { g ->
+            Gender.entries.forEach { g ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = 8.dp)
@@ -142,7 +142,8 @@ fun RegisterScreen(
                             firstName = firstName,
                             lastName = lastName,
                             dateOfBirth = dob,
-                            gender = gender
+                            gender = gender,
+                            photoUri = null
                         )
                         viewModel.registerStudent(student)
                     } else {

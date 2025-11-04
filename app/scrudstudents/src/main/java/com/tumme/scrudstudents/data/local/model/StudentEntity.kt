@@ -13,5 +13,6 @@ data class StudentEntity(
     val lastName: String,
     val firstName: String,
     val dateOfBirth: Date,
-    val gender: Gender
+    val gender: Gender,
+    val photoUri: String? = null
 )

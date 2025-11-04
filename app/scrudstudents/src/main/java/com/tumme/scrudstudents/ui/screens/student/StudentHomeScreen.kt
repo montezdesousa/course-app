@@ -19,7 +19,6 @@ fun StudentHomeScreen(
     onNavigateToCourses: (userId: String) -> Unit = {},
     onNavigateToSubscriptions: (userId: String) -> Unit = {},
     onNavigateToGrades: (userId: String) -> Unit = {},
-    onNavigateToFinalGradeSummary: (userId: String) -> Unit = {},
     onLogoutNavigate: () -> Unit = {}
 ) {
     Column(
@@ -68,19 +67,6 @@ fun StudentHomeScreen(
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
                 Text("My Grades")
-            }
-        }
-
-        // Final Grade Summary
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
-                .clickable { userId?.let { onNavigateToFinalGradeSummary(it) } },
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Box(modifier = Modifier.padding(16.dp)) {
-                Text("Final Grade Summary")
             }
         }
 

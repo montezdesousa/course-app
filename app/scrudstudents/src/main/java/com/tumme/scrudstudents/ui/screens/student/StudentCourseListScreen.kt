@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.screens.teacher
+package com.tumme.scrudstudents.ui.screens.student
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,7 +11,7 @@ import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TeacherGradeEntryScreen(
+fun StudentCourseListScreen(
     viewModel: AuthViewModel = hiltViewModel(),
     userId: String?, // Logged-in student ID
     onLogoutNavigate: () -> Unit = {}
