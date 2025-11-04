@@ -1,0 +1,152 @@
+package com.tumme.scrudstudents.ui.screens.auth
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.data.local.model.Gender
+import com.tumme.scrudstudents.data.local.model.StudentEntity
+import com.tumme.scrudstudents.data.local.model.TeacherEntity
+import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
+import java.util.*
+
+enum class UserRole { STUDENT, TEACHER }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RegisterScreen(
+    viewModel: AuthViewModel = hiltViewModel(),
+    onRegisterSuccess: () -> Unit = {}
+) {
+    var fullName by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var selectedRole by remember { mutableStateOf(UserRole.STUDENT) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Create Account", style = MaterialTheme.typography.headlineMedium)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // --- Role selector ---
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            RoleRadioButton(
+                selected = selectedRole == UserRole.STUDENT,
+                text = "Student",
+                onSelect = { selectedRole = UserRole.STUDENT }
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            RoleRadioButton(
+                selected = selectedRole == UserRole.TEACHER,
+                text = "Teacher",
+                onSelect = { selectedRole = UserRole.TEACHER }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // --- Full name ---
+        OutlinedTextField(
+            value = fullName,
+            onValueChange = { fullName = it },
+            label = { Text("Full Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // --- Username ---
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Username") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // --- Password ---
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // --- Confirm password ---
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text("Confirm Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // --- Register button ---
+        Button(
+            onClick = {
+                if (password == confirmPassword && username.isNotBlank()) {
+                    val firstName = fullName.substringBeforeLast(" ", fullName)
+                    val lastName = fullName.substringAfterLast(" ", "")
+
+                    if (selectedRole == UserRole.STUDENT) {
+                        val student = StudentEntity(
+                            username = username,
+                            password = password,
+                            firstName = firstName,
+                            lastName = lastName,
+                            dateOfBirth = Date(),
+                            gender = Gender.Male
+                        )
+                        viewModel.registerStudent(student)
+                    } else {
+                        val teacher = TeacherEntity(
+                            username = username,
+                            password = password,
+                            firstName = firstName,
+                            lastName = lastName,
+                            dateOfBirth = Date(),
+                            gender = Gender.Male,
+                        )
+                        viewModel.registerTeacher(teacher)
+                    }
+
+                    onRegisterSuccess()
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Register as ${selectedRole.name.lowercase().replaceFirstChar { it.uppercase() }}")
+        }
+    }
+}
+
+@Composable
+fun RoleRadioButton(selected: Boolean, text: String, onSelect: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(horizontal = 4.dp)
+    ) {
+        RadioButton(selected = selected, onClick = onSelect)
+        Text(text)
+    }
+}

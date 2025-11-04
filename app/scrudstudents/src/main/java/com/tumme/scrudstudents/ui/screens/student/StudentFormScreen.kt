@@ -30,7 +30,9 @@ fun StudentFormScreen(
     onSaved: ()->Unit = {} // Callback after saving (e.g., navigate back)
 ) {
     // Compose states for form inputs
-    var id by remember { mutableStateOf((0..10000).random()) } // Random ID for new student
+    var id by remember { mutableIntStateOf((0..10000).random()) } // Random ID for new student
+    var username by remember { mutableStateOf("") }                 // Username input
+    var password by remember { mutableStateOf("") }                 // Password input
     var lastName by remember { mutableStateOf("") }                  // Last Name input
     var firstName by remember { mutableStateOf("") }                 // First Name input
     var dobText by remember { mutableStateOf("2000-01-01") } // yyyy-MM-dd
@@ -64,6 +66,8 @@ fun StudentFormScreen(
             // Create StudentEntity
             val student = StudentEntity(
                 idStudent = id,
+                username = username,
+                password = password,
                 lastName = lastName,
                 firstName = firstName,
                 dateOfBirth = dob,

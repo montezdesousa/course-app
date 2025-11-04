@@ -19,4 +19,8 @@ object Routes {
     // --- Subscription routes ---
     const val SUBSCRIBE_LIST = "subscribe_list"
     const val SUBSCRIBE_FORM = "subscribe_form"
+
+    // --- Authentication routes ---
+    const val LOGIN = "login"
+    const val REGISTER = "register"
 }

@@ -30,6 +30,7 @@ object AppModule {
     @Provides fun provideStudentDao(db: AppDatabase): StudentDao = db.studentDao()
     @Provides fun provideCourseDao(db: AppDatabase): CourseDao = db.courseDao()
     @Provides fun provideSubscribeDao(db: AppDatabase): SubscribeDao = db.subscribeDao()
+    @Provides fun provideTeacherDao(db: AppDatabase): TeacherDao = db.teacherDao()
 
     @Provides
     @Singleton

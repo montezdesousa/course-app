@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
+import com.tumme.scrudstudents.ui.screens.auth.LoginScreen
 import com.tumme.scrudstudents.ui.screens.course.CourseDetailScreen
 import com.tumme.scrudstudents.ui.screens.course.CourseFormScreen
 import com.tumme.scrudstudents.ui.screens.student.StudentListScreen
@@ -12,6 +13,7 @@ import com.tumme.scrudstudents.ui.screens.student.StudentDetailScreen
 import com.tumme.scrudstudents.ui.screens.course.CourseListScreen
 import com.tumme.scrudstudents.ui.screens.subscribe.SubscribeFormScreen
 import com.tumme.scrudstudents.ui.screens.subscribe.SubscribeListScreen
+import com.tumme.scrudstudents.ui.screens.auth.RegisterScreen
 
 /**
  * Main navigation graph of the application.
@@ -36,7 +38,30 @@ fun AppNavHost() {
      * - startDestination: the first screen shown when the app starts.
      * - Each "composable" block defines a screen and its route.
      */
-    NavHost(navController, startDestination = Routes.SUBSCRIBE_LIST) {
+    NavHost(navController, startDestination = Routes.LOGIN) {
+
+        composable(Routes.LOGIN) {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Routes.SUBSCRIBE_LIST) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    }
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Routes.REGISTER)
+                }
+            )
+        }
+
+        composable(Routes.REGISTER) {
+            RegisterScreen(
+                onRegisterSuccess = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.REGISTER) { inclusive = true }
+                    }
+                }
+            )
+        }
 
         // -------------------------
         // Student navigation graph

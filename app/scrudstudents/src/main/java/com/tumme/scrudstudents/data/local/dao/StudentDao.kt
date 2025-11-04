@@ -69,4 +69,15 @@ interface StudentDao {
      */
     @Query("SELECT * FROM students WHERE idStudent = :id LIMIT 1")
     suspend fun getStudentById(id: Int): StudentEntity?
+
+    /**
+     * Authentication Query: Finds a student by matching username and password.
+     * Used by AuthRepository for dummy login.
+     *
+     * @param username The student's username.
+     * @param password The student's password.
+     * @return The StudentEntity if credentials match, or null.
+     */
+    @Query("SELECT * FROM students WHERE username = :username AND password = :password LIMIT 1")
+    suspend fun getStudentByUsernameAndPassword(username: String, password: String): StudentEntity?
 }
