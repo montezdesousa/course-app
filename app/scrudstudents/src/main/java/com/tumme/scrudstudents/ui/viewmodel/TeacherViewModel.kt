@@ -16,7 +16,6 @@ class TeacherViewModel @Inject constructor(
     private val repository: TeacherRepository
 ) : ViewModel() {
 
-    // Flow of courses for a specific teacher
     fun getCoursesForTeacher(teacherId: Int): StateFlow<List<CourseEntity>> {
         return repository.getCoursesByTeacher(teacherId.toString())
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
