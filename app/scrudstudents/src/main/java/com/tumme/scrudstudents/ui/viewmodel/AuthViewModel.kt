@@ -20,7 +20,6 @@ class AuthViewModel @Inject constructor(
     private val repo: AuthRepository
 ) : ViewModel() {
 
-    // --- Currently logged-in user info ---
     var currentUserId: Int? by mutableStateOf(null)
         private set
     var currentUsername: String? by mutableStateOf(null)
@@ -31,7 +30,6 @@ class AuthViewModel @Inject constructor(
         private set
 
 
-    // --- Registration ---
     fun registerStudent(student: StudentEntity) {
         viewModelScope.launch {
             repo.registerStudent(student)
@@ -44,7 +42,6 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    // --- Login ---
     var loginState by mutableStateOf<LoginState>(LoginState.Idle)
         private set
 
@@ -65,7 +62,6 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    // --- Logout ---
     fun logout() {
         currentUserId = null
         currentUserRole = null
@@ -73,7 +69,6 @@ class AuthViewModel @Inject constructor(
     }
 }
 
-// --- Login states ---
 sealed class LoginState {
     object Idle : LoginState()
     object Loading : LoginState()

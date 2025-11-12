@@ -14,7 +14,6 @@ class StudentViewModel @Inject constructor(
     private val studentRepo: StudentRepository
 ) : ViewModel() {
 
-    // --- All students as StateFlow ---
     val students: StateFlow<List<StudentEntity>> =
         studentRepo.getAllStudents()
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
@@ -22,17 +21,14 @@ class StudentViewModel @Inject constructor(
     private val _events = MutableSharedFlow<String>()
     val events = _events.asSharedFlow()
 
-    // --- Fetch student by ID as suspend function ---
     suspend fun getStudentById(studentId: Int): StudentEntity? {
         return studentRepo.getStudentById(studentId)
     }
 
-    // --- Optional: fetch student by ID as Flow ---
     fun getStudentByIdFlow(studentId: Int): Flow<StudentEntity?> = flow {
         emit(studentRepo.getStudentById(studentId))
     }
 
-    // --- CRUD operations ---
     fun insertStudent(student: StudentEntity) = viewModelScope.launch {
         studentRepo.insertStudent(student)
         _events.emit("Student saved")

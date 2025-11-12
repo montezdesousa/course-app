@@ -34,7 +34,6 @@ fun TeacherStudentListScreen(
         .getSubscribesByCourse(selectedCourse?.idCourse ?: -1)
         .collectAsState(initial = emptyList())
 
-    // --- Map studentId -> StudentEntity ---
     val studentMap = remember { mutableStateMapOf<Int, com.tumme.scrudstudents.data.local.model.StudentEntity?>() }
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(selectedCourse, enrolledSubscribes) {
@@ -87,7 +86,6 @@ fun TeacherStudentListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Students Table ---
         Text("Enrolled Students", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
