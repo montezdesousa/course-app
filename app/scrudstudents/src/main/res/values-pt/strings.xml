@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nome da aplicacap -->
+    <string name="app_name">SCRUDStudents</string>
+
+    <!-- Ecra de login -->
+    <string name="login_message">Bem-vindo de volta!</string>
+    <string name="login_username_label">Nome de utilizador</string>
+    <string name="login_password_label">Palavra-passe</string>
+    <string name="login_button">Iniciar sessão</string>
+    <string name="login_register_prompt">Não tem uma conta? Registe-se</string>
+    <string name="login_error_invalid_credentials">Credenciais inválidas</string>
+
+    <!-- Register Screen -->
+    <string name="register_create_account">Criar conta</string>
+    <string name="register_student_role">Estudante</string>
+    <string name="register_teacher_role">Professor</string>
+    <string name="register_first_name">Primeiro nome</string>
+    <string name="register_last_name">Último nome</string>
+    <string name="register_username">Nome de utilizador</string>
+    <string name="register_password">Palavra-passe</string>
+    <string name="register_confirm_password">Confirmar palavra-passe</string>
+    <string name="register_gender">Género</string>
+    <string name="register_level_of_study">Grau Académico</string>
+    <string name="register_button">Registar</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_welcome">Bem-vindo!</string>
+
+    <!-- Student Course List Screen -->
+    <string name="student_courses_for_level">Cadeiras para %1$s</string>
+    <string name="student_no_courses_available">Nenhuma cadeira disponível para o seu grau académico.</string>
+    <string name="course_name">Nome da Cadeira</string>
+    <string name="course_ects">ECTS</string>
+    <string name="course_level">Grau Académico</string>
+
+    <!-- Student Final Grade Summary Screen -->
+    <string name="student_final_grade_summary">Resumo da nota final</string>
+    <string name="student_not_enrolled">Ainda não está inscrito em nenhuma cadeira.</string>
+    <string name="graded_ects">ECTS com nota</string>
+    <string name="weighted_average">Média ponderada</string>
+
+    <!-- Student Grades Screen -->
+    <string name="student_my_grades">As minhas notas</string>
+    <string name="student_grade">Nota</string>
+    <string name="student_not_graded_yet">Ainda sem nota</string>
+
+    <!-- Student Home Screen -->
+    <string name="student_welcome">Bem-vindo, %1$s!</string>
+    <string name="student_courses">Cadeiras</string>
+    <string name="student_my_subscriptions">As minhas subscrições</string>
+    <string name="logout">Terminar sessão</string>
+
+    <!-- Student Subscribe Screen -->
+    <string name="student_enroll_in_new_course">Inscrever-se numa nova cadeira</string>
+    <string name="student_my_courses">As minhas cadeiras</string>
+    <string name="action">Ação</string>
+    <string name="unenroll">Cancelar inscrição</string>
+    <string name="enroll_in_a_course">Inscrever-se numa cadeira</string>
+    <string name="select_course">Selecionar cadeira</string>
+    <string name="enroll">Inscrever-se</string>
+    <string name="cancel">Cancelar</string>
+
+    <!-- Teacher Course List Screen -->
+    <string name="teacher_add_course">Adicionar cadeira</string>
+    <string name="teacher_no_courses_yet">Nenhuma cadeira ainda. Clique em + para adicionar uma.</string>
+    <string name="actions">Ações</string>
+    <string name="delete_course">Eliminar cadeira</string>
+    <string name="add_new_course">Adicionar nova cadeira</string>
+    <string name="select_level">Selecionar grau académico</string>
+    <string name="add">Adicionar</string>
+
+    <!-- Teacher Grade Entry Screen -->
+    <string name="teacher_course">Cadeira</string>
+    <string name="teacher_enrolled_students">Estudantes inscritos</string>
+    <string name="teacher_select_course_to_view_students">Selecione uma cadeira para ver os estudantes.</string>
+    <string name="teacher_no_students_enrolled">Nenhum estudante inscrito nesta cadeira.</string>
+    <string name="student_id">ID</string>
+    <string name="edit_grade">Editar nota</string>
+    <string name="save">Guardar</string>
+
+    <!-- Teacher Home Screen -->
+    <string name="teacher_welcome">Bem-vindo, %1$s!</string>
+    <string name="teacher_grades">Notas</string>
+
+    <!-- Gender -->
+    <string name="gender_male">Masculino</string>
+    <string name="gender_female">Feminino</string>
+    <string name="gender_not_concerned">NA</string>
+</resources>

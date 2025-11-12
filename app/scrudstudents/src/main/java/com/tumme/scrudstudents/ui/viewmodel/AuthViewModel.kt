@@ -1,5 +1,7 @@
 package com.tumme.scrudstudents.ui.viewmodel
 
+import com.tumme.scrudstudents.R
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -57,7 +59,7 @@ class AuthViewModel @Inject constructor(
                 currentUserLevelOfStudy = result.levelOfStudy
                 loginState = LoginState.Success(result)
             } else {
-                loginState = LoginState.Error("Invalid credentials")
+                loginState = LoginState.Error(R.string.login_error_invalid_credentials)
             }
         }
     }
@@ -73,5 +75,5 @@ sealed class LoginState {
     object Idle : LoginState()
     object Loading : LoginState()
     data class Success(val authResult: AuthResult) : LoginState()
-    data class Error(val message: String) : LoginState()
+    data class Error(@StringRes val message: Int) : LoginState()
 }

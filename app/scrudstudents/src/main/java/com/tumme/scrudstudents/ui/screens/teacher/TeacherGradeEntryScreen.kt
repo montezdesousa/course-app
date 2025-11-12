@@ -1,5 +1,6 @@
 package com.tumme.scrudstudents.ui.screens.teacher
 
+import com.tumme.scrudstudents.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.ui.components.TableHeader
@@ -70,7 +72,7 @@ fun TeacherGradeEntryScreen(
                 value = selectedCourse?.name ?: "",
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Course") },
+                label = { Text(stringResource(R.string.teacher_course)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = courseDropdownExpanded) },
                 modifier = Modifier.menuAnchor()
             )
@@ -95,16 +97,22 @@ fun TeacherGradeEntryScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // --- Students Table ---
-        Text("Enrolled Students", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.teacher_enrolled_students), style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
         if (selectedCourse == null) {
-            Text("Select a course to view students.")
+            Text(stringResource(R.string.teacher_select_course_to_view_students))
         } else if (enrolledSubscribes.isEmpty()) {
-            Text("No students enrolled in this course.")
+            Text(stringResource(R.string.teacher_no_students_enrolled))
         } else {
             TableHeader(
-                cells = listOf("ID", "First Name", "Last Name", "Grade", "Actions"),
+                cells = listOf(
+                    stringResource(R.string.student_id),
+                    stringResource(R.string.register_first_name),
+                    stringResource(R.string.register_last_name),
+                    stringResource(R.string.student_grade),
+                    stringResource(R.string.actions)
+                ),
                 weights = listOf(0.15f, 0.25f, 0.25f, 0.2f, 0.15f)
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -132,7 +140,7 @@ fun TeacherGradeEntryScreen(
                             },
                             modifier = Modifier.weight(0.15f)
                         ) {
-                            Icon(Icons.Default.Edit, contentDescription = "Edit grade")
+                            Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit_grade))
                         }
                     }
                     Divider()
@@ -145,12 +153,12 @@ fun TeacherGradeEntryScreen(
     if (gradeDialogVisible && subscribeToEdit != null) {
         AlertDialog(
             onDismissRequest = { gradeDialogVisible = false },
-            title = { Text("Edit Grade") },
+            title = { Text(stringResource(R.string.edit_grade)) },
             text = {
                 OutlinedTextField(
                     value = gradeToEdit,
                     onValueChange = { gradeToEdit = it },
-                    label = { Text("Grade") },
+                    label = { Text(stringResource(R.string.student_grade)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -163,11 +171,11 @@ fun TeacherGradeEntryScreen(
                     }
                     gradeDialogVisible = false
                 }) {
-                    Text("Save")
+                    Text(stringResource(R.string.save))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { gradeDialogVisible = false }) { Text("Cancel") }
+                TextButton(onClick = { gradeDialogVisible = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }

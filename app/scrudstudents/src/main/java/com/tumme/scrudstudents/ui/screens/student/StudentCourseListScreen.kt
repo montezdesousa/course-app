@@ -1,11 +1,13 @@
 package com.tumme.scrudstudents.ui.screens.student
 
+import com.tumme.scrudstudents.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.ui.components.TableHeader
@@ -29,16 +31,20 @@ fun StudentCourseListScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "Courses for ${studentLevel.value}",
+            text = stringResource(R.string.student_courses_for_level, studentLevel.value),
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         if (courses.isEmpty()) {
-            Text("No courses available for your level.")
+            Text(stringResource(R.string.student_no_courses_available))
         } else {
             TableHeader(
-                cells = listOf("Name", "ECTS", "Level"),
+                cells = listOf(
+                    stringResource(R.string.course_name),
+                    stringResource(R.string.course_ects),
+                    stringResource(R.string.course_level)
+                ),
                 weights = listOf(0.5f, 0.25f, 0.25f)
             )
             Spacer(Modifier.height(8.dp))

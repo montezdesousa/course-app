@@ -1,5 +1,6 @@
 package com.tumme.scrudstudents.ui.screens.student
 
+import com.tumme.scrudstudents.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -7,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
@@ -29,7 +31,7 @@ fun StudentHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Welcome, ${authViewModel.currentUsername}!",
+            text = stringResource(R.string.student_welcome, authViewModel.currentUsername ?: ""),
             style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -43,7 +45,7 @@ fun StudentHomeScreen(
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
-                Text("Courses")
+                Text(stringResource(R.string.student_courses))
             }
         }
 
@@ -56,7 +58,7 @@ fun StudentHomeScreen(
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
-                Text("My Subscriptions")
+                Text(stringResource(R.string.student_my_subscriptions))
             }
         }
 
@@ -69,7 +71,7 @@ fun StudentHomeScreen(
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
-                Text("My Grades")
+                Text(stringResource(R.string.student_my_grades))
             }
         }
 
@@ -82,7 +84,7 @@ fun StudentHomeScreen(
             shape = RoundedCornerShape(8.dp)
         ) {
             Box(modifier = Modifier.padding(16.dp)) {
-                Text("Final Grade Summary")
+                Text(stringResource(R.string.student_final_grade_summary))
             }
         }
 
@@ -96,7 +98,7 @@ fun StudentHomeScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Logout")
+            Text(stringResource(R.string.logout))
         }
     }
 }

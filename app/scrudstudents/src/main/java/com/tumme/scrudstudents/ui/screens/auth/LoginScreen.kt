@@ -1,10 +1,12 @@
 package com.tumme.scrudstudents.ui.screens.auth
 
+import com.tumme.scrudstudents.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,7 +32,11 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome Back", style = MaterialTheme.typography.headlineMedium)
+        // --- Title ---
+        Text(
+            text = stringResource(R.string.login_message),
+            style = MaterialTheme.typography.headlineMedium
+        )
 
         Spacer(Modifier.height(24.dp))
 
@@ -38,7 +44,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Username") },
+            label = { Text(stringResource(R.string.login_username_label)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -48,7 +54,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.login_password_label)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
@@ -62,7 +68,7 @@ fun LoginScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Login")
+            Text(stringResource(R.string.login_button))
         }
 
         // --- UI reacts to login state ---
@@ -75,7 +81,7 @@ fun LoginScreen(
             is LoginState.Error -> {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = state.message,
+                    text = stringResource(state.message),
                     color = MaterialTheme.colorScheme.error
                 )
             }
@@ -99,7 +105,7 @@ fun LoginScreen(
 
         // --- Register navigation ---
         TextButton(onClick = onNavigateToRegister) {
-            Text("Don't have an account? Register")
+            Text(stringResource(R.string.login_register_prompt))
         }
     }
 }

@@ -1,10 +1,12 @@
 package com.tumme.scrudstudents.ui.screens.auth
 
+import com.tumme.scrudstudents.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
@@ -26,7 +28,7 @@ fun SplashScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Welcome!",
+            text = stringResource(R.string.splash_welcome),
             style = MaterialTheme.typography.headlineLarge
         )
 

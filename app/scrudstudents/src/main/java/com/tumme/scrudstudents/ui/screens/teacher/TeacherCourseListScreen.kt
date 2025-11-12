@@ -1,5 +1,6 @@
 package com.tumme.scrudstudents.ui.screens.teacher
 
+import com.tumme.scrudstudents.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.ui.components.TableHeader
@@ -32,10 +34,10 @@ fun TeacherCourseListScreen(
     var newCourseLevel by remember { mutableStateOf(LevelCourse.P1) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("My Courses") }) },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.student_my_courses)) }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add course")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.teacher_add_course))
             }
         }
     ) { padding ->
@@ -46,10 +48,15 @@ fun TeacherCourseListScreen(
                 .padding(16.dp)
         ) {
             if (courses.isEmpty()) {
-                Text("No courses yet. Click + to add one.")
+                Text(stringResource(R.string.teacher_no_courses_yet))
             } else {
                 TableHeader(
-                    cells = listOf("Name", "ECTS", "Level", "Actions"),
+                    cells = listOf(
+                        stringResource(R.string.course_name),
+                        stringResource(R.string.course_ects),
+                        stringResource(R.string.course_level),
+                        stringResource(R.string.actions)
+                    ),
                     weights = listOf(0.4f, 0.2f, 0.2f, 0.2f)
                 )
                 Spacer(Modifier.height(8.dp))
@@ -69,7 +76,7 @@ fun TeacherCourseListScreen(
                                 onClick = { teacherViewModel.deleteCourse(course) },
                                 modifier = Modifier.weight(0.2f)
                             ) {
-                                Icon(Icons.Default.Delete, contentDescription = "Delete course")
+                                Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_course))
                             }
                         }
                         Divider()
@@ -82,19 +89,19 @@ fun TeacherCourseListScreen(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("Add New Course") },
+            title = { Text(stringResource(R.string.add_new_course)) },
             text = {
                 Column {
                     OutlinedTextField(
                         value = newCourseName,
                         onValueChange = { newCourseName = it },
-                        label = { Text("Course Name") },
+                        label = { Text(stringResource(R.string.course_name)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = newCourseEcts,
                         onValueChange = { newCourseEcts = it },
-                        label = { Text("ECTS") },
+                        label = { Text(stringResource(R.string.course_ects)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -106,10 +113,10 @@ fun TeacherCourseListScreen(
                             value = newCourseLevel.value,
                             onValueChange = {},
                             readOnly = true,
-                            label = { Text("Level") },
+                            label = { Text(stringResource(R.string.course_level)) },
                             trailingIcon = {
                                 IconButton(onClick = { expanded = !expanded }) {
-                                    Icon(Icons.Default.Add, contentDescription = "Select level")
+                                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.select_level))
                                 }
                             },
                             modifier = Modifier.fillMaxWidth()
@@ -147,11 +154,11 @@ fun TeacherCourseListScreen(
                     newCourseLevel = LevelCourse.P1
                     showDialog = false
                 }) {
-                    Text("Add")
+                    Text(stringResource(R.string.add))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showDialog = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }

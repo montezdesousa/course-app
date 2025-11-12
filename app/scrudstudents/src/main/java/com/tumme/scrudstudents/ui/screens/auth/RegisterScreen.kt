@@ -1,10 +1,12 @@
 package com.tumme.scrudstudents.ui.screens.auth
 
+import com.tumme.scrudstudents.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,6 +18,15 @@ import com.tumme.scrudstudents.ui.viewmodel.AuthViewModel
 import java.util.*
 
 enum class UserRole { STUDENT, TEACHER }
+
+@Composable
+fun Gender.toTranslatedString(): String {
+    return when (this) {
+        Gender.Male -> stringResource(R.string.gender_male)
+        Gender.Female -> stringResource(R.string.gender_female)
+        Gender.NotConcerned -> stringResource(R.string.gender_not_concerned)
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +54,7 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Create Account", style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(R.string.register_create_account), style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
 
         // --- Role selector ---
@@ -51,11 +62,11 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            RoleRadioButton(selected = selectedRole == UserRole.STUDENT, text = "Student") {
+            RoleRadioButton(selected = selectedRole == UserRole.STUDENT, text = stringResource(R.string.register_student_role)) {
                 selectedRole = UserRole.STUDENT
             }
             Spacer(modifier = Modifier.width(16.dp))
-            RoleRadioButton(selected = selectedRole == UserRole.TEACHER, text = "Teacher") {
+            RoleRadioButton(selected = selectedRole == UserRole.TEACHER, text = stringResource(R.string.register_teacher_role)) {
                 selectedRole = UserRole.TEACHER
             }
         }
@@ -66,7 +77,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = firstName,
             onValueChange = { firstName = it },
-            label = { Text("First Name") },
+            label = { Text(stringResource(R.string.register_first_name)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -76,7 +87,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = lastName,
             onValueChange = { lastName = it },
-            label = { Text("Last Name") },
+            label = { Text(stringResource(R.string.register_last_name)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -86,7 +97,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Username") },
+            label = { Text(stringResource(R.string.register_username)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -96,7 +107,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.register_password)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
@@ -107,7 +118,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
+            label = { Text(stringResource(R.string.register_confirm_password)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
@@ -120,10 +131,10 @@ fun RegisterScreen(
             onExpandedChange = { genderExpanded = !genderExpanded }
         ) {
             OutlinedTextField(
-                value = gender.name,
+                value = gender.toTranslatedString(),
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Gender") },
+                label = { Text(stringResource(R.string.register_gender)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = genderExpanded) },
                 modifier = Modifier
                     .menuAnchor()
@@ -135,7 +146,7 @@ fun RegisterScreen(
             ) {
                 Gender.entries.forEach { g ->
                     DropdownMenuItem(
-                        text = { Text(g.name) },
+                        text = { Text(g.toTranslatedString()) },
                         onClick = {
                             gender = g
                             genderExpanded = false
@@ -157,7 +168,7 @@ fun RegisterScreen(
                     value = levelOfStudy.value,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Level of Study") },
+                    label = { Text(stringResource(R.string.register_level_of_study)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = levelExpanded) },
                     modifier = Modifier
                         .menuAnchor()
@@ -223,7 +234,7 @@ fun RegisterScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Register")
+            Text(stringResource(R.string.register_button))
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.tumme.scrudstudents.ui.screens.student
 
+import com.tumme.scrudstudents.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.ui.components.TableHeader
@@ -36,10 +38,10 @@ fun StudentSubscribeScreen(
     var selectedCourseForEnroll by remember { mutableStateOf<SubscribeEntity?>(null) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("My Subscriptions") }) },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.student_my_subscriptions)) }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { showEnrollDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Enroll in new course")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.student_enroll_in_new_course))
             }
         }
     ) { padding ->
@@ -54,16 +56,21 @@ fun StudentSubscribeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("My Courses", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.student_my_courses), style = MaterialTheme.typography.titleMedium)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             if (enrolledCourses.isEmpty()) {
-                Text("You are not enrolled in any courses yet.")
+                Text(stringResource(R.string.student_not_enrolled))
             } else {
                 TableHeader(
-                    cells = listOf("Name", "ECTS", "Level", "Action"),
+                    cells = listOf(
+                        stringResource(R.string.course_name),
+                        stringResource(R.string.course_ects),
+                        stringResource(R.string.course_level),
+                        stringResource(R.string.action)
+                    ),
                     weights = listOf(0.45f, 0.2f, 0.2f, 0.15f)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -89,7 +96,7 @@ fun StudentSubscribeScreen(
                                 },
                                 modifier = Modifier.weight(0.15f)
                             ) {
-                                Icon(Icons.Default.Delete, contentDescription = "Unenroll")
+                                Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.unenroll))
                             }
                         }
                         Divider()
@@ -100,7 +107,7 @@ fun StudentSubscribeScreen(
             if (showEnrollDialog) {
                 AlertDialog(
                     onDismissRequest = { showEnrollDialog = false },
-                    title = { Text("Enroll in a course") },
+                    title = { Text(stringResource(R.string.enroll_in_a_course)) },
                     text = {
                         Column {
                             var expanded by remember { mutableStateOf(false) }
@@ -110,10 +117,10 @@ fun StudentSubscribeScreen(
                                 value = selectedCourse,
                                 onValueChange = {},
                                 readOnly = true,
-                                label = { Text("Select Course") },
+                                label = { Text(stringResource(R.string.select_course)) },
                                 trailingIcon = {
                                     IconButton(onClick = { expanded = !expanded }) {
-                                        Icon(Icons.Default.Add, contentDescription = "Select course")
+                                        Icon(Icons.Default.Add, contentDescription = stringResource(R.string.select_course))
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth()
@@ -145,10 +152,10 @@ fun StudentSubscribeScreen(
                             selectedCourseForEnroll?.let { subscribeViewModel.insertSubscribe(it) }
                             showEnrollDialog = false
                             selectedCourseForEnroll = null
-                        }) { Text("Enroll") }
+                        }) { Text(stringResource(R.string.enroll)) }
                     },
                     dismissButton = {
-                        TextButton(onClick = { showEnrollDialog = false }) { Text("Cancel") }
+                        TextButton(onClick = { showEnrollDialog = false }) { Text(stringResource(R.string.cancel)) }
                     }
                 )
             }
